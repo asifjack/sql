@@ -1,0 +1,60 @@
+/*CREATE DATABASE*/
+CREATE DATABASE SP_TestDb
+
+use SP_TestDb
+
+/*Creating Table*/
+create table Departments
+( id int primary key identity,
+  DepName varchar(255),
+  Email varchar(255),
+  Mobile varchar(255)
+) 
+/*store procedure*/
+
+create procedure SP_Department
+@action varchar(40),
+@id int = 0,
+@DepName varchar(255)=null,
+@Email varchar(255)=null,
+@Mobile varchar(255)=null
+as
+begin	
+if(@action='SELECT')
+begin
+select * from Departments
+end
+else if(@action='CREATE')
+begin
+insert into Departments(DepName,Email,Mobile) values (@DepName,@Email,@Mobile)
+select 1 as result
+end
+else if(@action='DELETE')
+begin 
+delete from Departments where id=@id
+select 1 as result
+end
+else if(@action='UPDATE')
+begin
+update Departments set DepName=@DepName,Email=@Email,Mobile=@Mobile Where id=@id
+select 1 as result
+end
+else if(@action='SELECT_SI')
+begin
+select * from Departments where id=@id
+end
+end
+
+
+/*Calling Store Procedure*/
+
+exec Sp_Department 'select'
+exec Sp_Department 'CREATE',0,'Hrcr','asif','asif@mail.com'
+exec SP_Department 'SELECT_SI' ,1
+exec SP_Department 'UPDATE',1,'Hr emp','rata','ratatata@gmail.com'
+exec SP_Department 'DELETE' ,2
+
+
+
+
+
