@@ -57,4 +57,62 @@ exec SP_Department 'DELETE' ,2
 
 
 
+/************************* STORE PROCEDURE FOR CUSTOMER*********************************************************************************************************/
+
+/*Creating Table*/
+create table Customers
+( id int primary key identity,
+  CustomerName varchar(255),
+  Email varchar(255),
+  Mobile  varchar(255),
+  CustomereAddress varchar(255)
+) 
+
+select * from Customers
+
+/*Store Procedure*/
+
+create procedure SP_Customer
+@action varchar(40),
+@id int = 0,
+@CustomerName varchar(255)=null,
+@Email varchar(255)=null,
+@Mobile varchar(255)=null,
+@CustomereAddress varchar(255)=null
+as
+begin	
+if(@action='SELECT')
+begin
+select * from Customers
+end
+else if(@action='CREATE')
+begin
+insert into Customers(CustomerName,Email,Mobile,CustomereAddress) values (@CustomerName,@Email,@Mobile,@CustomereAddress)
+select 1 as result
+end
+else if(@action='DELETE')
+begin 
+delete from Customers where id=@id
+select 1 as result
+end
+else if(@action='UPDATE')
+begin
+update Customers set CustomerName=@CustomerName,Email=@Email,Mobile=@Mobile,CustomereAddress=@CustomereAddress Where id=@id
+select 1 as result
+end
+else if(@action='SELECT_SI')
+begin
+select * from Customers where id=@id
+end
+end
+
+
+/*Calling Store Procedure*/
+
+exec SP_Customer 'select'
+exec SP_Customer 'CREATE',0,'ASif','asif@mail.com','987489999','Noida'
+exec SP_Department 'SELECT_SI' ,1
+exec SP_Department 'UPDATE',1,'Rajat Sharma','rajtshar@gmail.com','7896541236'
+exec SP_Department 'SELECT_SI' ,1
+
 
